@@ -26,6 +26,8 @@ public:
     Widget(QWidget *parent = 0);
     ~Widget();
 
+    double camAngle, camNearPlane, camFarPlane;
+
 protected:
     void initializeGL();
     void resizeGL(int w, int h);

@@ -3,6 +3,9 @@
 Widget::Widget(QWidget *parent)
     : QOpenGLWidget (parent), m_texture(0), m_indexBuffer(QOpenGLBuffer::IndexBuffer)
 {
+    this->camAngle = 45.0;
+    this->camNearPlane = 0.1;
+    this->camFarPlane = 10.0;
 }
 
 Widget::~Widget()
@@ -24,7 +27,7 @@ void Widget::initializeGL()
 void Widget::resizeGL(int w, int h)
 {
     m_projectionMatrix.setToIdentity();
-    m_projectionMatrix.perspective(45.0f, w / (float)h, 0.1f, 10.0f);
+    m_projectionMatrix.perspective(camAngle, w / (float)h, camNearPlane, camFarPlane);
 }
 
 void Widget::paintGL()
