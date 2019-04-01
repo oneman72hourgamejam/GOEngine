@@ -26,6 +26,7 @@ public:
     Widget(QWidget *parent = 0);
     ~Widget();
 
+    QOpenGLTexture *m_texture;
     double camAngle, camNearPlane, camFarPlane;
 
 protected:
@@ -38,7 +39,7 @@ protected:
 private:
     QMatrix4x4 m_projectionMatrix;
     QOpenGLShaderProgram m_program;
-    QOpenGLTexture *m_texture;
+
     QOpenGLBuffer m_arrayBuffer;
     QOpenGLBuffer m_indexBuffer;
 };

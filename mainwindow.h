@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFileDialog>
 
 namespace Ui {
 class MainWindow;
@@ -22,8 +23,12 @@ private slots:
 
     void on_camFarPlane_valueChanged(double arg1);
 
+    void on_pushButton_2_pressed();
+
 private:
     Ui::MainWindow *ui;
+    QPixmap image;
+    QImage  *imageObject;
 };
 
 #endif // MAINWINDOW_H
