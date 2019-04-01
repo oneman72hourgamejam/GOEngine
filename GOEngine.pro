@@ -42,3 +42,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 LIBS += opengl32.lib
+
+DISTFILES +=
+
+RESOURCES += \
+    shaders.qrc \
+    textures.qrc
