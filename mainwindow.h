@@ -25,6 +25,8 @@ private slots:
 
     void on_pushButton_2_pressed();
 
+    void on_camSmooth_valueChanged(double arg1);
+
 private:
     Ui::MainWindow *ui;
     QPixmap image;

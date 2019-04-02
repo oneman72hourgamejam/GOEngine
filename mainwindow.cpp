@@ -50,3 +50,9 @@ void MainWindow::on_pushButton_2_pressed()
 
     qDebug() << "imagePath" << imagePath;
 }
+
+void MainWindow::on_camSmooth_valueChanged(double arg1)
+{
+    this->ui->widget->camSmooth = arg1;
+    qDebug() << "camFarPlane" << arg1;
+}

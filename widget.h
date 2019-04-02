@@ -28,7 +28,7 @@ public:
 
     QOpenGLTexture *m_texture;
 
-    double camAngle, camNearPlane, camFarPlane;
+    double camAngle, camNearPlane, camFarPlane, camSmooth;
 
 protected:
     void initializeGL();

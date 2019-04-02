@@ -8,6 +8,7 @@ Widget::Widget(QWidget *parent)
     this->camAngle = 45.0;
     this->camNearPlane = 0.1;
     this->camFarPlane = 10.0;
+    this->camSmooth = 2.0;
 }
 
 Widget::~Widget()
@@ -91,7 +92,7 @@ void Widget::mouseMoveEvent(QMouseEvent *event)
     m_mousePosition = QVector2D(event->localPos());
 
     // плавный угол поворота
-    float angle = diff.length() / 2.0;
+    float angle = diff.length() / camSmooth;
 
     // вектор осуществляющий поворот (перпендикулярный вектор)
     QVector3D axis = QVector3D(diff.y(), diff.x(), 0.0);
