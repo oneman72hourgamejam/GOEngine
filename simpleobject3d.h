@@ -30,6 +30,7 @@ public:
     SimpleObject3D(const QVector<VertexData> &vertData, const QVector<GLuint> &indexes, const QImage &texture);
     void init(const QVector<VertexData> &vertData, const QVector<GLuint> &indexes, const QImage &texture);
     void draw(QOpenGLShaderProgram *program, QOpenGLFunctions *functions);
+    void translate(const QVector3D &translateVector);
 
 private:
     QOpenGLBuffer m_vertexBuffer;

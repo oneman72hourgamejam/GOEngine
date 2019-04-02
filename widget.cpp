@@ -45,6 +45,7 @@ void Widget::updateCamPos()
     m_ambientFactor = ambientFactor;
     m_lightColor = QVector4D(lightColorR, lightColorG, lightColorB, lightColorA);
     m_lightPosition = QVector4D(lightPosX, lightPosY, lightPosZ, lightPosW);
+
     update();
 }
 
@@ -57,6 +58,9 @@ void Widget::initializeGL()
 
     initShaders();
     initCube(1.0f);
+    m_objects[0]->translate(QVector3D(-1.2, 0.0, 0.0));
+    initCube(0.5f);
+    m_objects[1]->translate(QVector3D(0.0, 0.0, 0.0));
 }
 
 void Widget::resizeGL(int w, int h)
