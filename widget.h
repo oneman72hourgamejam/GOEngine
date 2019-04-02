@@ -27,12 +27,17 @@ public:
     ~Widget();
 
     QOpenGLTexture *m_texture;
+
     double camAngle, camNearPlane, camFarPlane;
 
 protected:
     void initializeGL();
     void resizeGL(int w, int h);
     void paintGL();
+
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+
     void initShaders();
     void initCube(float width);
 
@@ -42,6 +47,9 @@ private:
 
     QOpenGLBuffer m_arrayBuffer;
     QOpenGLBuffer m_indexBuffer;
+
+    QVector2D m_mousePosition;
+    QQuaternion m_rotation;
 };
 
 #endif // WIDGET_H

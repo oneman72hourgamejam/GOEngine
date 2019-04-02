@@ -1,5 +1,7 @@
 #include "widget.h"
 
+#include <QMouseEvent>
+
 Widget::Widget(QWidget *parent)
     : QOpenGLWidget (parent), m_texture(0), m_indexBuffer(QOpenGLBuffer::IndexBuffer)
 {
@@ -37,10 +39,13 @@ void Widget::paintGL()
     QMatrix4x4 modelViewMatrix;
     modelViewMatrix.setToIdentity();
     modelViewMatrix.translate(0.0, 0.0, -5.0);
+    modelViewMatrix.rotate(m_rotation);
 
-    m_texture->bind(0); //номер 0 должен совпадать с номером в uniform value qt_Texture0
+    // номер 0 должен совпадать с номером в uniform value qt_Texture0
+    m_texture->bind(0);
 
-    m_program.bind(); // биндим программу, чтоб иметь к ней доступ
+    // биндим программу, чтоб иметь к ней доступ
+    m_program.bind();
     m_program.setUniformValue("qt_ModelViewProjectionMatrix", m_projectionMatrix * modelViewMatrix);
     m_program.setUniformValue("qt_Texture0", 0);
 
@@ -63,6 +68,40 @@ void Widget::paintGL()
     glDrawElements(GL_TRIANGLES, m_indexBuffer.size(), GL_UNSIGNED_INT, 0);
 }
 
+void Widget::mousePressEvent(QMouseEvent *event)
+{
+    if(event->buttons() == Qt::LeftButton)
+    {
+        // локальные координаты мыши относительно левого верхнего угла окна
+        m_mousePosition = QVector2D(event->localPos());
+    }
+    event->accept();
+}
+
+void Widget::mouseMoveEvent(QMouseEvent *event)
+{
+    if(event->buttons() != Qt::LeftButton)
+    {
+        return;
+    }
+
+    // текущяя позиция - предыдущяя
+    QVector2D diff = QVector2D(event->localPos()) - m_mousePosition;
+    // сохраняем текущюю позицию
+    m_mousePosition = QVector2D(event->localPos());
+
+    // плавный угол поворота
+    float angle = diff.length() / 2.0;
+
+    // вектор осуществляющий поворот (перпендикулярный вектор)
+    QVector3D axis = QVector3D(diff.y(), diff.x(), 0.0);
+    // вектор вокруг которого будет осуществляться поворот и угол поворота,
+    // домножаем на м_ротейшн чтоб продолжить поворот с текущей позиции
+    m_rotation = QQuaternion::fromAxisAndAngle(axis, angle) * m_rotation;
+
+    update();
+}
+
 void Widget::initShaders()
 {
     if(!m_program.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/vshader.vsh"))
@@ -74,7 +113,8 @@ void Widget::initShaders()
         close();
     }
 
-    if(!m_program.link()) //объеденяем все шейдеры в один
+    // объеденяем все шейдеры в один
+    if(!m_program.link())
     {
         close();
     }
@@ -129,14 +169,16 @@ void Widget::initCube(float width)
     m_arrayBuffer.create();
     m_arrayBuffer.bind();
     m_arrayBuffer.allocate(vertexes.constData(), vertexes.size() * sizeof(VertexData));
-    m_arrayBuffer.release(); //освобождаем буфер
+    // освобождаем буфер
+    m_arrayBuffer.release();
 
     m_indexBuffer.create();
     m_indexBuffer.bind();
     m_indexBuffer.allocate(indexes.constData(), indexes.size() * sizeof(GLuint));
     m_indexBuffer.release();
 
-    m_texture = new QOpenGLTexture(QImage(":/cube.png").mirrored()); //особенность OpenGL, нужно текстуру подавать отраженную по вертикали
+    // особенность OpenGL, нужно текстуру подавать отраженную по вертикали
+    m_texture = new QOpenGLTexture(QImage(":/cube.png").mirrored());
     m_texture->setMinificationFilter(QOpenGLTexture::Nearest);
     m_texture->setMagnificationFilter(QOpenGLTexture::Linear);
     m_texture->setWrapMode(QOpenGLTexture::Repeat);
