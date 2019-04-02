@@ -48,32 +48,47 @@ void Widget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    QMatrix4x4 modelViewMatrix;
-    modelViewMatrix.setToIdentity();
-    modelViewMatrix.translate(m_position);
-    modelViewMatrix.rotate(m_rotation);
+    QMatrix4x4 viewMatrix;
+    viewMatrix.setToIdentity();
+    viewMatrix.translate(m_position);
+    viewMatrix.rotate(m_rotation);
+
+    QMatrix4x4 modelMatrix;
+    modelMatrix.setToIdentity();
 
     // номер 0 должен совпадать с номером в uniform value qt_Texture0
     m_texture->bind(0);
 
     // биндим программу, чтоб иметь к ней доступ
     m_program.bind();
-    m_program.setUniformValue("qt_ModelViewProjectionMatrix", m_projectionMatrix * modelViewMatrix);
-    m_program.setUniformValue("qt_Texture0", 0);
+    m_program.setUniformValue("u_projectionMatrix", m_projectionMatrix);
+    m_program.setUniformValue("u_viewMatrix", viewMatrix);
+    m_program.setUniformValue("u_modelMatrix", modelMatrix);
+    m_program.setUniformValue("u_texture", 0);
+    // QVector4D(0.0, 0.0, 0.0, 1.0) - вершина, а не вектор
+    m_program.setUniformValue("u_lightPosition", QVector4D(0.0, 0.0, 0.0, 1.0));
+    m_program.setUniformValue("u_lightPower", 5.0f);
 
     m_arrayBuffer.bind();
 
     int offset = 0;
 
-    int vertLoc = m_program.attributeLocation("qt_Vertex");
+    int vertLoc = m_program.attributeLocation("a_position");
     m_program.enableAttributeArray(vertLoc);
     m_program.setAttributeBuffer(vertLoc, GL_FLOAT, offset, 3, sizeof(VertexData));
-
+    // сдвиг 3д, так как перед текстурными координатами идут координаты вершины
     offset += sizeof(QVector3D);
 
-    int texLoc = m_program.attributeLocation("qt_MultiTexCoord0");
+    int texLoc = m_program.attributeLocation("a_texcoord");
     m_program.enableAttributeArray(texLoc);
     m_program.setAttributeBuffer(texLoc, GL_FLOAT, offset, 2, sizeof(VertexData));
+
+    // добавляем нормаль, сдвиг 2д, так как перед координатами нормали идут текстурные координаты
+    offset += sizeof(QVector2D);
+
+    int normLoc = m_program.attributeLocation("a_normal");
+    m_program.enableAttributeArray(normLoc);
+    m_program.setAttributeBuffer(normLoc, GL_FLOAT, offset, 3, sizeof(VertexData));
 
     m_indexBuffer.bind();
 
