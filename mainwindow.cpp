@@ -76,6 +76,7 @@ void MainWindow::on_camPosZ_valueChanged(double arg1)
 {
     this->ui->widget->camPosZ = arg1;
     this->ui->widget->updateCamPos();
+    //this->ui->camPosZ->setValue(this->ui->widget->camPosZ);
     qDebug() << "camPosZ" << arg1;
 }
 
