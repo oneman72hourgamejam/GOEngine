@@ -27,11 +27,13 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    widget.cpp
+    widget.cpp \
+    simpleobject3d.cpp
 
 HEADERS += \
         mainwindow.h \
-    widget.h
+    widget.h \
+    simpleobject3d.h
 
 FORMS += \
         mainwindow.ui
