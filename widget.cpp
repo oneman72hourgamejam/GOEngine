@@ -129,6 +129,22 @@ void Widget::mouseMoveEvent(QMouseEvent *event)
     update();
 }
 
+void Widget::wheelEvent(QWheelEvent *event)
+{
+    // дельта - на сколько повернули колесико
+    if(event->delta() > 0)
+    {
+        camPosZ += 0.25f;
+    }
+    else if(event->delta() < 0)
+    {
+        camPosZ -= 0.25f;
+    }
+
+    m_position = QVector3D(camPosX, camPosY, -camPosZ);
+    update();
+}
+
 void Widget::initShaders()
 {
     if(!m_program.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/vshader.vsh"))
