@@ -44,10 +44,10 @@ void MainWindow::on_pushButton_2_pressed()
     imageObject = new QImage();
     imageObject->load(imagePath);
 
-    this->ui->widget->m_texture = new QOpenGLTexture(imageObject->mirrored());
-    this->ui->widget->m_texture->setMinificationFilter(QOpenGLTexture::Nearest);
-    this->ui->widget->m_texture->setMagnificationFilter(QOpenGLTexture::Linear);
-    this->ui->widget->m_texture->setWrapMode(QOpenGLTexture::Repeat);
+//    this->ui->widget->m_texture = new QOpenGLTexture(imageObject->mirrored());
+//    this->ui->widget->m_texture->setMinificationFilter(QOpenGLTexture::Nearest);
+//    this->ui->widget->m_texture->setMagnificationFilter(QOpenGLTexture::Linear);
+//    this->ui->widget->m_texture->setWrapMode(QOpenGLTexture::Repeat);
 
     qDebug() << "imagePath" << imagePath;
 }

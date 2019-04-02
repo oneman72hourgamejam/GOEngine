@@ -1,9 +1,10 @@
 #include "widget.h"
-
+#include <simpleobject3d.h>
 #include <QMouseEvent>
+#include <QOpenGLContext>
 
 Widget::Widget(QWidget *parent)
-    : QOpenGLWidget (parent), m_texture(0), m_indexBuffer(QOpenGLBuffer::IndexBuffer)
+    : QOpenGLWidget (parent)
 {
     this->camAngle = 45.0;
     this->camNearPlane = 0.1;
@@ -73,18 +74,10 @@ void Widget::paintGL()
     viewMatrix.translate(m_position);
     viewMatrix.rotate(m_rotation);
 
-    QMatrix4x4 modelMatrix;
-    modelMatrix.setToIdentity();
-
-    // номер 0 должен совпадать с номером в uniform value qt_Texture0
-    m_texture->bind(0);
-
     // биндим программу, чтоб иметь к ней доступ
     m_program.bind();
     m_program.setUniformValue("u_projectionMatrix", m_projectionMatrix);
     m_program.setUniformValue("u_viewMatrix", viewMatrix);
-    m_program.setUniformValue("u_modelMatrix", modelMatrix);
-    m_program.setUniformValue("u_texture", 0);
     // QVector4D(0.0, 0.0, 0.0, 1.0) - вершина, а не вектор
     m_program.setUniformValue("u_lightColor", m_lightColor);
     m_program.setUniformValue("u_lightPosition", m_lightPosition);
@@ -92,30 +85,10 @@ void Widget::paintGL()
     m_program.setUniformValue("u_specularFactor", m_specularFactor);
     m_program.setUniformValue("u_ambientFactor", m_ambientFactor);
 
-    m_arrayBuffer.bind();
-
-    int offset = 0;
-
-    int vertLoc = m_program.attributeLocation("a_position");
-    m_program.enableAttributeArray(vertLoc);
-    m_program.setAttributeBuffer(vertLoc, GL_FLOAT, offset, 3, sizeof(VertexData));
-    // сдвиг 3д, так как перед текстурными координатами идут координаты вершины
-    offset += sizeof(QVector3D);
-
-    int texLoc = m_program.attributeLocation("a_texcoord");
-    m_program.enableAttributeArray(texLoc);
-    m_program.setAttributeBuffer(texLoc, GL_FLOAT, offset, 2, sizeof(VertexData));
-
-    // добавляем нормаль, сдвиг 2д, так как перед координатами нормали идут текстурные координаты
-    offset += sizeof(QVector2D);
-
-    int normLoc = m_program.attributeLocation("a_normal");
-    m_program.enableAttributeArray(normLoc);
-    m_program.setAttributeBuffer(normLoc, GL_FLOAT, offset, 3, sizeof(VertexData));
-
-    m_indexBuffer.bind();
-
-    glDrawElements(GL_TRIANGLES, m_indexBuffer.size(), GL_UNSIGNED_INT, 0);
+    for(int i = 0; i < m_objects.size(); ++i)
+    {
+        m_objects[i]->draw(&m_program, context()->functions());
+    }
 }
 
 void Widget::mousePressEvent(QMouseEvent *event)
@@ -205,7 +178,8 @@ void Widget::initCube(float width)
     vertexes.append(VertexData(QVector3D(width_div_2, -width_div_2, width_div_2), QVector2D(1.0, 1.0), QVector3D(0.0, -1.0, 0.0)));
     vertexes.append(VertexData(QVector3D(width_div_2, -width_div_2, -width_div_2), QVector2D(1.0, 0.0), QVector3D(0.0, -1.0, 0.0)));
 
-    QVector<GLuint> indexes; //хватило бы и short
+    // хватило бы и short
+    QVector<GLuint> indexes;
     for(int i = 0; i < 24; i += 4)
     {
         indexes.append(i + 0);
@@ -216,22 +190,8 @@ void Widget::initCube(float width)
         indexes.append(i + 3);
     }
 
-    m_arrayBuffer.create();
-    m_arrayBuffer.bind();
-    m_arrayBuffer.allocate(vertexes.constData(), vertexes.size() * sizeof(VertexData));
-    // освобождаем буфер
-    m_arrayBuffer.release();
-
-    m_indexBuffer.create();
-    m_indexBuffer.bind();
-    m_indexBuffer.allocate(indexes.constData(), indexes.size() * sizeof(GLuint));
-    m_indexBuffer.release();
-
-    // особенность OpenGL, нужно текстуру подавать отраженную по вертикали
-    m_texture = new QOpenGLTexture(QImage(":/cube.png").mirrored());
-    m_texture->setMinificationFilter(QOpenGLTexture::Nearest);
-    m_texture->setMagnificationFilter(QOpenGLTexture::Linear);
-    m_texture->setWrapMode(QOpenGLTexture::Repeat);
+    //m_image = new QOpenGLTexture(QImage(":/cube.png");
+    m_objects.append(new SimpleObject3D(vertexes, indexes, QImage(":/cube.png")));
 }
 
 

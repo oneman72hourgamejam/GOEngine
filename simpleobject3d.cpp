@@ -12,9 +12,13 @@ SimpleObject3D::SimpleObject3D() :
 SimpleObject3D::~SimpleObject3D()
 {
     if(m_vertexBuffer.isCreated())
+    {
         m_vertexBuffer.destroy();
+    }
     if(m_indexBuffer.isCreated())
+    {
         m_indexBuffer.destroy();
+    }
     if(m_texture != 0)
     {
         if(m_texture->isCreated())
@@ -30,6 +34,23 @@ SimpleObject3D::SimpleObject3D(const QVector<VertexData> &vertData, const QVecto
 
 void SimpleObject3D::init(const QVector<VertexData> &vertData, const QVector<GLuint> &indexes, const QImage &texture)
 {
+    if(m_vertexBuffer.isCreated())
+    {
+        m_vertexBuffer.destroy();
+    }
+    if(m_indexBuffer.isCreated())
+    {
+        m_indexBuffer.destroy();
+    }
+    if(m_texture != 0)
+    {
+        if(m_texture->isCreated())
+        {
+            delete m_texture;
+            m_texture = 0;
+        }
+    }
+
     m_vertexBuffer.create();
     m_vertexBuffer.bind();
     m_vertexBuffer.allocate(vertData.constData(), vertData.size() * sizeof(VertexData));
@@ -50,6 +71,10 @@ void SimpleObject3D::init(const QVector<VertexData> &vertData, const QVector<GLu
 
 void SimpleObject3D::draw(QOpenGLShaderProgram *program, QOpenGLFunctions *functions)
 {
+    if(!m_vertexBuffer.isCreated() || !m_indexBuffer.isCreated())
+        return;
+
+    // номер 0 должен совпадать с номером в uniform value u_texture
     m_texture->bind(0);
     program->setUniformValue("u_texture", 0);
     program->setUniformValue("u_modelMatrix", m_modelMatrix);

@@ -5,7 +5,8 @@
 #include <QMatrix4x4>
 #include <QVector2D>
 
-struct VertexData //структура заполняющяя initCube
+// структура заполняющяя объекты
+struct VertexData
 {
     VertexData()
     {}

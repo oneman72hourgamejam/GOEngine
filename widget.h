@@ -7,17 +7,7 @@
 #include <QOpenGLTexture>
 #include <QOpenGLBuffer>
 
-struct VertexData //структура заполняющяя initCube
-{
-    VertexData()
-    {}
-    VertexData(QVector3D p, QVector2D t, QVector3D n) :
-        position(p), texCoord(t), normal(n)
-    {}
-    QVector3D position;
-    QVector2D texCoord;
-    QVector3D normal;
-};
+class SimpleObject3D;
 
 class Widget : public QOpenGLWidget
 {
@@ -28,7 +18,7 @@ public:
 
     void updateCamPos();
 
-    QOpenGLTexture *m_texture;
+//    QImage *m_image;
 
     double camAngle, camNearPlane, camFarPlane, camSmooth;
     double camPosX, camPosY, camPosZ;
@@ -51,9 +41,6 @@ private:
     QMatrix4x4 m_projectionMatrix;
     QOpenGLShaderProgram m_program;
 
-    QOpenGLBuffer m_arrayBuffer;
-    QOpenGLBuffer m_indexBuffer;
-
     QVector2D m_mousePosition;
     QQuaternion m_rotation;
     QVector3D m_position;
@@ -61,6 +48,8 @@ private:
     QVector4D m_lightColor;
     float m_lightPower;
     float m_ambientFactor, m_specularFactor;
+
+    QVector<SimpleObject3D *> m_objects;
 };
 
 #endif // WIDGET_H
