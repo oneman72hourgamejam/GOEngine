@@ -26,9 +26,12 @@ public:
     Widget(QWidget *parent = 0);
     ~Widget();
 
+    void updateCamPos();
+
     QOpenGLTexture *m_texture;
 
     double camAngle, camNearPlane, camFarPlane, camSmooth;
+    double camPosX, camPosY, camPosZ;
 
 protected:
     void initializeGL();
@@ -50,6 +53,7 @@ private:
 
     QVector2D m_mousePosition;
     QQuaternion m_rotation;
+    QVector3D m_position;
 };
 
 #endif // WIDGET_H

@@ -14,6 +14,7 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
+
     ~MainWindow();
 
 private slots:
@@ -26,6 +27,12 @@ private slots:
     void on_pushButton_2_pressed();
 
     void on_camSmooth_valueChanged(double arg1);
+
+    void on_camPosX_valueChanged(double arg1);
+
+    void on_camPosY_valueChanged(double arg1);
+
+    void on_camPosZ_valueChanged(double arg1);
 
 private:
     Ui::MainWindow *ui;

@@ -7,13 +7,24 @@ Widget::Widget(QWidget *parent)
 {
     this->camAngle = 45.0;
     this->camNearPlane = 0.1;
-    this->camFarPlane = 10.0;
+    this->camFarPlane = 20.0;
     this->camSmooth = 2.0;
+    this->camPosX = 0.1;
+    this->camPosY = 0.1;
+    this->camPosZ = 5.0;
+    m_position = QVector3D(camPosX, camPosY, -camPosZ);
 }
 
 Widget::~Widget()
 {
 
+}
+
+void Widget::updateCamPos()
+{
+    m_position = QVector3D(camPosX, camPosY, -camPosZ);
+
+    update();
 }
 
 void Widget::initializeGL()
@@ -39,7 +50,7 @@ void Widget::paintGL()
 
     QMatrix4x4 modelViewMatrix;
     modelViewMatrix.setToIdentity();
-    modelViewMatrix.translate(0.0, 0.0, -5.0);
+    modelViewMatrix.translate(m_position);
     modelViewMatrix.rotate(m_rotation);
 
     // номер 0 должен совпадать с номером в uniform value qt_Texture0
