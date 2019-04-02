@@ -78,3 +78,80 @@ void MainWindow::on_camPosZ_valueChanged(double arg1)
     this->ui->widget->updateCamPos();
     qDebug() << "camPosZ" << arg1;
 }
+
+void MainWindow::on_lightColorR_valueChanged(double arg1)
+{
+    this->ui->widget->lightColorR = arg1;
+    this->ui->widget->updateCamPos();
+    qDebug() << "lightColorR" << arg1;
+}
+
+void MainWindow::on_lightColorG_valueChanged(double arg1)
+{
+    this->ui->widget->lightColorG = arg1;
+    this->ui->widget->updateCamPos();
+    qDebug() << "lightColorG" << arg1;
+}
+
+void MainWindow::on_lightColorB_valueChanged(double arg1)
+{
+    this->ui->widget->lightColorB = arg1;
+    this->ui->widget->updateCamPos();
+    qDebug() << "lightColorB" << arg1;
+}
+
+void MainWindow::on_lightColorA_valueChanged(double arg1)
+{
+    this->ui->widget->lightColorA = arg1;
+    this->ui->widget->updateCamPos();
+    qDebug() << "lightColorA" << arg1;
+}
+
+void MainWindow::on_lightPosX_valueChanged(double arg1)
+{
+    this->ui->widget->lightPosX = arg1;
+    this->ui->widget->updateCamPos();
+    qDebug() << "lightPosX" << arg1;
+}
+
+void MainWindow::on_lightPosY_valueChanged(double arg1)
+{
+    this->ui->widget->lightPosY = arg1;
+    this->ui->widget->updateCamPos();
+    qDebug() << "lightPosY" << arg1;
+}
+
+void MainWindow::on_lightPosZ_valueChanged(double arg1)
+{
+    this->ui->widget->lightPosZ = arg1;
+    this->ui->widget->updateCamPos();
+    qDebug() << "lightPosZ" << arg1;
+}
+
+void MainWindow::on_lightPosW_valueChanged(double arg1)
+{
+    this->ui->widget->lightPosW = arg1;
+    this->ui->widget->updateCamPos();
+    qDebug() << "lightPosW" << arg1;
+}
+
+void MainWindow::on_lightPower_valueChanged(double arg1)
+{
+    this->ui->widget->lightPower = arg1;
+    this->ui->widget->updateCamPos();
+    qDebug() << "lightPower" << arg1;
+}
+
+void MainWindow::on_specularFactor_valueChanged(double arg1)
+{
+    this->ui->widget->specularFactor = arg1;
+    this->ui->widget->updateCamPos();
+    qDebug() << "specularFactor" << arg1;
+}
+
+void MainWindow::on_ambientFactor_valueChanged(double arg1)
+{
+    this->ui->widget->ambientFactor = arg1;
+    this->ui->widget->updateCamPos();
+    qDebug() << "ambientFactor" << arg1;
+}

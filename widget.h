@@ -32,6 +32,9 @@ public:
 
     double camAngle, camNearPlane, camFarPlane, camSmooth;
     double camPosX, camPosY, camPosZ;
+    double specularFactor, ambientFactor, lightPower;
+    double lightPosX, lightPosY, lightPosZ, lightPosW;
+    double lightColorR, lightColorG, lightColorB, lightColorA;
 
 protected:
     void initializeGL();
@@ -54,6 +57,10 @@ private:
     QVector2D m_mousePosition;
     QQuaternion m_rotation;
     QVector3D m_position;
+    QVector4D m_lightPosition;
+    QVector4D m_lightColor;
+    float m_lightPower;
+    float m_ambientFactor, m_specularFactor;
 };
 
 #endif // WIDGET_H

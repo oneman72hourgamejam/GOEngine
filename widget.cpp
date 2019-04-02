@@ -12,7 +12,23 @@ Widget::Widget(QWidget *parent)
     this->camPosX = 0.1;
     this->camPosY = 0.1;
     this->camPosZ = 5.0;
+    this->specularFactor = 60.0;
+    this->ambientFactor = 0.1;
+    this->lightPower = 5.0f;
+    this->lightPosX = 0.0;
+    this->lightPosY = 0.0;
+    this->lightPosZ = 0.0;
+    this->lightPosW = 1.0;
+    this->lightColorR = 1.0;
+    this->lightColorG = 1.0;
+    this->lightColorB = 1.0;
+    this->lightColorA = 1.0;
     m_position = QVector3D(camPosX, camPosY, -camPosZ);
+    m_lightPower = lightPower;
+    m_specularFactor = specularFactor;
+    m_ambientFactor = ambientFactor;
+    m_lightColor = QVector4D(lightColorR, lightColorG, lightColorB, lightColorA);
+    m_lightPosition = QVector4D(lightPosX, lightPosY, lightPosZ, lightPosW);
 }
 
 Widget::~Widget()
@@ -23,13 +39,17 @@ Widget::~Widget()
 void Widget::updateCamPos()
 {
     m_position = QVector3D(camPosX, camPosY, -camPosZ);
-
+    m_lightPower = lightPower;
+    m_specularFactor = specularFactor;
+    m_ambientFactor = ambientFactor;
+    m_lightColor = QVector4D(lightColorR, lightColorG, lightColorB, lightColorA);
+    m_lightPosition = QVector4D(lightPosX, lightPosY, lightPosZ, lightPosW);
     update();
 }
 
 void Widget::initializeGL()
 {
-    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -66,8 +86,11 @@ void Widget::paintGL()
     m_program.setUniformValue("u_modelMatrix", modelMatrix);
     m_program.setUniformValue("u_texture", 0);
     // QVector4D(0.0, 0.0, 0.0, 1.0) - вершина, а не вектор
-    m_program.setUniformValue("u_lightPosition", QVector4D(0.0, 0.0, 0.0, 1.0));
-    m_program.setUniformValue("u_lightPower", 5.0f);
+    m_program.setUniformValue("u_lightColor", m_lightColor);
+    m_program.setUniformValue("u_lightPosition", m_lightPosition);
+    m_program.setUniformValue("u_lightPower", m_lightPower);
+    m_program.setUniformValue("u_specularFactor", m_specularFactor);
+    m_program.setUniformValue("u_ambientFactor", m_ambientFactor);
 
     m_arrayBuffer.bind();
 

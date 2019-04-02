@@ -4,7 +4,10 @@
 uniform sampler2D u_texture;
 // положение источника света (хайпресижн)
 uniform highp vec4 u_lightPosition;
+uniform highp vec4 u_lightColor;
 uniform highp float u_lightPower;
+uniform highp float u_specularFactor;
+uniform highp float u_ambientFactor;
 varying highp vec4 v_position;
 varying highp vec2 v_texcoord;
 varying highp vec3 v_normal;
@@ -29,16 +32,16 @@ void main(void)
     // расстояние от наблюдателя к рассматриваемой точке
     float len = length(v_position.xyz - eyePosition.xyz);
     // отвечает за то, насколько большое будет пятно блика
-    float specularFactor = 60.0;
+    float specularFactor = u_specularFactor;
     // отвечает за то, насколько будет светиться сам материал
-    float ambientFactor = 0.1;
+    float ambientFactor = u_ambientFactor;
 
     vec4 diffColor = diffMatColor * u_lightPower * max(0.0, dot(v_normal, -lightVect)) / (1.0 + 0.25 * pow(len, 2.0));
     resultColor += diffColor;
     vec4 ambientColor = ambientFactor * diffMatColor;
     resultColor += ambientColor;
     // делим на 1 + коефициент * на квадрат расстояния, чтобы с отдалением было меньше освещения и влияния источника света
-    vec4 specularColor = vec4(1.0, 1.0, 1.0, 1.0) * u_lightPower * pow(max(0.0, dot(reflectLight, -eyeVect)), specularFactor) / (1.0 + 0.25 * pow(len, 2.0));
+    vec4 specularColor = u_lightColor * u_lightPower * pow(max(0.0, dot(reflectLight, -eyeVect)), specularFactor) / (1.0 + 0.25 * pow(len, 2.0));
     resultColor += specularColor;
 
     gl_FragColor = resultColor;
