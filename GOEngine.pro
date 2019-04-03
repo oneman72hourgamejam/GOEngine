@@ -28,12 +28,15 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     widget.cpp \
-    simpleobject3d.cpp
+    simpleobject3d.cpp \
+    group3d.cpp
 
 HEADERS += \
         mainwindow.h \
     widget.h \
-    simpleobject3d.h
+    simpleobject3d.h \
+    transformational.h \
+    group3d.h
 
 FORMS += \
         mainwindow.ui

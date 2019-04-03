@@ -7,8 +7,8 @@ Widget::Widget(QWidget *parent)
     : QOpenGLWidget (parent)
 {
     this->camAngle = 45.0;
-    this->camNearPlane = 0.1;
-    this->camFarPlane = 20.0;
+    this->camNearPlane = 0.01f;
+    this->camFarPlane = 100.0f;
     this->camSmooth = 2.0;
     this->camPosX = 0.1;
     this->camPosY = 0.1;
@@ -66,6 +66,7 @@ void Widget::initializeGL()
 void Widget::resizeGL(int w, int h)
 {
     m_projectionMatrix.setToIdentity();
+    // плоскость отсечения
     m_projectionMatrix.perspective(camAngle, w / (float)h, camNearPlane, camFarPlane);
 }
 
