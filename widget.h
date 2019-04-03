@@ -6,6 +6,7 @@
 #include <QMatrix4x4>
 #include <QOpenGLTexture>
 #include <QOpenGLBuffer>
+#include <QBasicTimer>
 
 class SimpleObject3D;
 class Transformational;
@@ -36,6 +37,7 @@ protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void wheelEvent(QWheelEvent *event);
+    void timerEvent(QTimerEvent *event);
 
     void initShaders();
     void initCube(float width);
@@ -55,6 +57,13 @@ private:
     QVector<SimpleObject3D *> m_objects;
     QVector<Transformational *> m_TransformObjects;
     QVector<Group3D *> m_groups;
+
+    QBasicTimer m_timer;
+
+    float angleObject;
+    float angleGroup1;
+    float angleGroup2;
+    float angleMain;
 };
 
 #endif // WIDGET_H

@@ -1,8 +1,10 @@
 #include "widget.h"
 #include <simpleobject3d.h>
 #include <QMouseEvent>
+#include <QtMath>
 #include <QOpenGLContext>
 #include "group3d.h"
+
 
 Widget::Widget(QWidget *parent)
     : QOpenGLWidget (parent)
@@ -98,6 +100,8 @@ void Widget::initializeGL()
     m_groups[2]->addObject(m_groups[1]);
 
     m_TransformObjects.append(m_groups[2]);
+
+    m_timer.start(30, this);
 }
 
 void Widget::resizeGL(int w, int h)
@@ -180,6 +184,39 @@ void Widget::wheelEvent(QWheelEvent *event)
     }
 
     m_position = QVector3D(camPosX, camPosY, -camPosZ);
+    update();
+}
+
+void Widget::timerEvent(QTimerEvent *event)
+{
+    for(int i = 0; i < m_objects.size(); ++i)
+    {
+        if(i % 2 == 0)
+        {
+            m_objects[i]->rotate(QQuaternion::fromAxisAndAngle(1.0f, 0.0f, 0.0f, qSin(angleObject)));
+            m_objects[i]->rotate(QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, qCos(angleObject)));
+        }
+        else
+        {
+            m_objects[i]->rotate(QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, qSin(angleObject)));
+            m_objects[i]->rotate(QQuaternion::fromAxisAndAngle(1.0f, 0.0f, 0.0f, qCos(angleObject)));
+        }
+    }
+
+    m_groups[0]->rotate(QQuaternion::fromAxisAndAngle(0.0f, 0.0f, 1.0f, qSin(angleGroup1)));
+    m_groups[0]->rotate(QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, -qSin(angleGroup1)));
+
+    m_groups[1]->rotate(QQuaternion::fromAxisAndAngle(1.0f, 0.0f, 0.0f, qCos(angleGroup1)));
+    m_groups[1]->rotate(QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, -qCos(angleGroup1)));
+
+    m_groups[2]->rotate(QQuaternion::fromAxisAndAngle(1.0f, 0.0f, 0.0f, qSin(angleMain)));
+    m_groups[2]->rotate(QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, qCos(angleMain)));
+
+    angleObject += M_PI / 180.0f;
+    angleGroup1 += M_PI / 360.0f;
+    angleGroup2 -= M_PI / 360.0f;
+    angleMain += M_PI / 720.0f;
+
     update();
 }
 
