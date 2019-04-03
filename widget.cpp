@@ -2,6 +2,7 @@
 #include <simpleobject3d.h>
 #include <QMouseEvent>
 #include <QOpenGLContext>
+#include "group3d.h"
 
 Widget::Widget(QWidget *parent)
     : QOpenGLWidget (parent)
@@ -57,10 +58,46 @@ void Widget::initializeGL()
     glEnable(GL_CULL_FACE);
 
     initShaders();
-    initCube(1.0f);
-    m_objects[0]->translate(QVector3D(-1.2, 0.0, 0.0));
-    initCube(0.5f);
-    m_objects[1]->translate(QVector3D(0.0, 0.0, 0.0));
+
+    float step = 1.0f;
+    m_groups.append(new Group3D);
+
+    for (int x = -step; x <= step; x += step)
+    {
+        for (int y = -step; y <= step; y += step)
+        {
+            for (int z = -step; z <= step; z += step)
+            {
+                initCube(0.5f);
+                m_objects[m_objects.size() - 1]->translate(QVector3D(x, y, z));
+                m_groups[m_groups.size() - 1]->addObject(m_objects[m_objects.size() - 1]);
+            }
+        }
+    }
+    m_groups[0]->translate(QVector3D(-2.0f, 0.0f, 0.0f));
+
+    m_groups.append(new Group3D);
+
+    for (int x = -step; x <= step; x += step)
+    {
+        for (int y = -step; y <= step; y += step)
+        {
+            for (int z = -step; z <= step; z += step)
+            {
+                initCube(0.5f);
+                m_objects[m_objects.size() - 1]->translate(QVector3D(x, y, z));
+                m_groups[m_groups.size() - 1]->addObject(m_objects[m_objects.size() - 1]);
+            }
+        }
+    }
+    m_groups[1]->translate(QVector3D(2.0f, 0.0f, 0.0f));
+
+    // содержит в себе обе группы объектов
+    m_groups.append(new Group3D);
+    m_groups[2]->addObject(m_groups[0]);
+    m_groups[2]->addObject(m_groups[1]);
+
+    m_TransformObjects.append(m_groups[2]);
 }
 
 void Widget::resizeGL(int w, int h)
@@ -90,9 +127,9 @@ void Widget::paintGL()
     m_program.setUniformValue("u_specularFactor", m_specularFactor);
     m_program.setUniformValue("u_ambientFactor", m_ambientFactor);
 
-    for(int i = 0; i < m_objects.size(); ++i)
+    for(int i = 0; i < m_TransformObjects.size(); ++i)
     {
-        m_objects[i]->draw(&m_program, context()->functions());
+        m_TransformObjects[i]->draw(&m_program, context()->functions());
     }
 }
 

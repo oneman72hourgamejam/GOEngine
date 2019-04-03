@@ -8,6 +8,8 @@
 #include <QOpenGLBuffer>
 
 class SimpleObject3D;
+class Transformational;
+class Group3D;
 
 class Widget : public QOpenGLWidget
 {
@@ -51,6 +53,8 @@ private:
     float m_ambientFactor, m_specularFactor;
 
     QVector<SimpleObject3D *> m_objects;
+    QVector<Transformational *> m_TransformObjects;
+    QVector<Group3D *> m_groups;
 };
 
 #endif // WIDGET_H
