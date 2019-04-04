@@ -3,19 +3,22 @@
 #include <QMouseEvent>
 #include <QtMath>
 #include <QOpenGLContext>
+#include "camera3d.h"
 #include "group3d.h"
 
 
 Widget::Widget(QWidget *parent)
     : QOpenGLWidget (parent)
 {
+    m_camera = new Camera3D;
+    m_camera->translate(QVector3D(0.0, 0.0, -5.0));
     this->camAngle = 45.0;
     this->camNearPlane = 0.01f;
     this->camFarPlane = 100.0f;
     this->camSmooth = 2.0;
-    this->camPosX = 0.1;
-    this->camPosY = 0.1;
-    this->camPosZ = 5.0;
+    //this->camPosX = 0.1;
+    //this->camPosY = 0.1;
+    //this->camPosZ = 5.0;
     this->specularFactor = 60.0;
     this->ambientFactor = 0.1;
     this->lightPower = 5.0f;
@@ -27,7 +30,7 @@ Widget::Widget(QWidget *parent)
     this->lightColorG = 1.0;
     this->lightColorB = 1.0;
     this->lightColorA = 1.0;
-    m_position = QVector3D(camPosX, camPosY, -camPosZ);
+    //m_position = QVector3D(camPosX, camPosY, -camPosZ);
     m_lightPower = lightPower;
     m_specularFactor = specularFactor;
     m_ambientFactor = ambientFactor;
@@ -37,12 +40,25 @@ Widget::Widget(QWidget *parent)
 
 Widget::~Widget()
 {
-
+    delete m_camera;
+    for(int i = 0; i < m_objects.size(); ++i)
+    {
+        delete m_objects[i];
+    }
+    for(int i = 0; i < m_groups.size(); ++i)
+    {
+        delete m_groups[i];
+    }
+    for(int i = 0; i < m_TransformObjects.size(); ++i)
+    {
+        // решить проблему с удалением
+        //delete m_TransformObjects[i];
+    }
 }
 
 void Widget::updateCamPos()
 {
-    m_position = QVector3D(camPosX, camPosY, -camPosZ);
+    //m_position = QVector3D(camPosX, camPosY, -camPosZ);
     m_lightPower = lightPower;
     m_specularFactor = specularFactor;
     m_ambientFactor = ambientFactor;
@@ -115,15 +131,15 @@ void Widget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    QMatrix4x4 viewMatrix;
-    viewMatrix.setToIdentity();
-    viewMatrix.translate(m_position);
-    viewMatrix.rotate(m_rotation);
+//    QMatrix4x4 viewMatrix;
+//    viewMatrix.setToIdentity();
+//    viewMatrix.translate(m_position);
+//    viewMatrix.rotate(m_rotation);
 
     // биндим программу, чтоб иметь к ней доступ
     m_program.bind();
     m_program.setUniformValue("u_projectionMatrix", m_projectionMatrix);
-    m_program.setUniformValue("u_viewMatrix", viewMatrix);
+    //m_program.setUniformValue("u_viewMatrix", viewMatrix);
     // QVector4D(0.0, 0.0, 0.0, 1.0) - вершина, а не вектор
     m_program.setUniformValue("u_lightColor", m_lightColor);
     m_program.setUniformValue("u_lightPosition", m_lightPosition);
@@ -131,6 +147,7 @@ void Widget::paintGL()
     m_program.setUniformValue("u_specularFactor", m_specularFactor);
     m_program.setUniformValue("u_ambientFactor", m_ambientFactor);
 
+    m_camera->draw(&m_program);
     for(int i = 0; i < m_TransformObjects.size(); ++i)
     {
         m_TransformObjects[i]->draw(&m_program, context()->functions());
@@ -166,7 +183,9 @@ void Widget::mouseMoveEvent(QMouseEvent *event)
     QVector3D axis = QVector3D(diff.y(), diff.x(), 0.0);
     // вектор вокруг которого будет осуществляться поворот и угол поворота,
     // домножаем на м_ротейшн чтоб продолжить поворот с текущей позиции
-    m_rotation = QQuaternion::fromAxisAndAngle(axis, angle) * m_rotation;
+    //m_rotation = QQuaternion::fromAxisAndAngle(axis, angle) * m_rotation;
+
+    m_camera->rotate(QQuaternion::fromAxisAndAngle(axis, angle));
 
     update();
 }
@@ -176,14 +195,16 @@ void Widget::wheelEvent(QWheelEvent *event)
     // дельта - на сколько повернули колесико
     if(event->delta() > 0)
     {
-        camPosZ += 0.25f;
+        //camPosZ += 0.25f;
+        m_camera->translate(QVector3D(0.0f, 0.0f, 0.25f));
     }
     else if(event->delta() < 0)
     {
-        camPosZ -= 0.25f;
+        m_camera->translate(QVector3D(0.0f, 0.0f, -0.25f));
+        //camPosZ -= 0.25f;
     }
 
-    m_position = QVector3D(camPosX, camPosY, -camPosZ);
+    //m_position = QVector3D(camPosX, camPosY, -camPosZ);
     update();
 }
 

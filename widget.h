@@ -11,6 +11,7 @@
 class SimpleObject3D;
 class Transformational;
 class Group3D;
+class Camera3D;
 
 class Widget : public QOpenGLWidget
 {
@@ -24,7 +25,7 @@ public:
 //    QImage *m_image;
 
     double camAngle, camNearPlane, camFarPlane, camSmooth;
-    double camPosX, camPosY, camPosZ;
+    //double camPosX, camPosY, camPosZ;
     double specularFactor, ambientFactor, lightPower;
     double lightPosX, lightPosY, lightPosZ, lightPosW;
     double lightColorR, lightColorG, lightColorB, lightColorA;
@@ -48,7 +49,7 @@ private:
 
     QVector2D m_mousePosition;
     QQuaternion m_rotation;
-    QVector3D m_position;
+    //QVector3D m_position;
     QVector4D m_lightPosition;
     QVector4D m_lightColor;
     float m_lightPower;
@@ -64,6 +65,8 @@ private:
     float angleGroup1;
     float angleGroup2;
     float angleMain;
+
+    Camera3D * m_camera;
 };
 
 #endif // WIDGET_H

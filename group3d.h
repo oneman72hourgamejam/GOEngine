@@ -2,6 +2,7 @@
 #define GROUP3D_H
 
 #include "transformational.h"
+#include <QVector>
 #include <QMatrix4x4>
 #include <QQuaternion>
 #include <QVector3D>
@@ -15,6 +16,7 @@ public:
     void scale(const float &s);
     void setGlobalTransform(const QMatrix4x4 &g);
     void draw(QOpenGLShaderProgram *program, QOpenGLFunctions *functions);
+
     void addObject(Transformational *obj);
 
 private:
