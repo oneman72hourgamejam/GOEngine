@@ -213,6 +213,8 @@ void Widget::wheelEvent(QWheelEvent *event)
 
 void Widget::timerEvent(QTimerEvent *event)
 {
+    Q_UNUSED(event);
+
     for(int i = 0; i < m_objects.size(); ++i)
     {
         if(i % 2 == 0)

@@ -31,7 +31,8 @@ SOURCES += \
     simpleobject3d.cpp \
     group3d.cpp \
     camera3d.cpp \
-    transformational.cpp
+    transformational.cpp \
+    skybox.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -39,7 +40,8 @@ HEADERS += \
     simpleobject3d.h \
     transformational.h \
     group3d.h \
-    camera3d.h
+    camera3d.h \
+    skybox.h
 
 FORMS += \
         mainwindow.ui
