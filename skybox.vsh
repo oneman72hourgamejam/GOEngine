@@ -12,7 +12,7 @@ void main(void)
     viewMatrix[3][0] = 0;
     viewMatrix[3][1] = 0;
     viewMatrix[3][2] = 0;
-    mat4 mv_matrix = viewMatrix * u_modelMatrix;
+    mat4 mv_matrix = u_viewMatrix * u_modelMatrix;
     gl_Position = u_projectionMatrix * mv_matrix * a_position;
     v_texcoord = a_texcoord;
 }

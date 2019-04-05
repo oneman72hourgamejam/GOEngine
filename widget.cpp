@@ -78,49 +78,62 @@ void Widget::initializeGL()
 
     initShaders();
 
-    float step = 1.0f;
+//    float step = 1.0f;
     m_groups.append(new Group3D);
 
-    for (int x = -step; x <= step; x += step)
-    {
-        for (int y = -step; y <= step; y += step)
-        {
-            for (int z = -step; z <= step; z += step)
-            {
-                initCube(0.5f);
-                m_objects[m_objects.size() - 1]->translate(QVector3D(x, y, z));
-                m_groups[m_groups.size() - 1]->addObject(m_objects[m_objects.size() - 1]);
-            }
-        }
-    }
-    m_groups[0]->translate(QVector3D(-2.0f, 0.0f, 0.0f));
+    initCube(2.0f);
+    m_objects[0]->translate(QVector3D(0.0, 0.0, 0.0));
+    m_groups[0]->addObject(m_objects[0]);
 
-    m_groups.append(new Group3D);
+//    for (int x = -step; x <= step; x += step)
+//    {
+//        for (int y = -step; y <= step; y += step)
+//        {
+//            for (int z = -step; z <= step; z += step)
+//            {
+//                initCube(0.5f);
+//                m_objects[m_objects.size() - 1]->translate(QVector3D(x, y, z));
+//                m_groups[m_groups.size() - 1]->addObject(m_objects[m_objects.size() - 1]);
+//            }
+//        }
+//    }
+//    m_groups[0]->translate(QVector3D(-2.0f, 0.0f, 0.0f));
 
-    for (int x = -step; x <= step; x += step)
-    {
-        for (int y = -step; y <= step; y += step)
-        {
-            for (int z = -step; z <= step; z += step)
-            {
-                initCube(0.5f);
-                m_objects[m_objects.size() - 1]->translate(QVector3D(x, y, z));
-                m_groups[m_groups.size() - 1]->addObject(m_objects[m_objects.size() - 1]);
-            }
-        }
-    }
-    m_groups[1]->translate(QVector3D(2.0f, 0.0f, 0.0f));
+//    m_groups.append(new Group3D);
+
+//    for (int x = -step; x <= step; x += step)
+//    {
+//        for (int y = -step; y <= step; y += step)
+//        {
+//            for (int z = -step; z <= step; z += step)
+//            {
+//                initCube(0.5f);
+//                m_objects[m_objects.size() - 1]->translate(QVector3D(x, y, z));
+//                m_groups[m_groups.size() - 1]->addObject(m_objects[m_objects.size() - 1]);
+//            }
+//        }
+//    }
+//    m_groups[1]->translate(QVector3D(2.0f, 0.0f, 0.0f));
 
     // содержит в себе обе группы объектов
     m_groups.append(new Group3D);
-    m_groups[2]->addObject(m_groups[0]);
-    m_groups[2]->addObject(m_groups[1]);
 
-    m_TransformObjects.append(m_groups[2]);
+    m_groups[1]->addObject(m_groups[0]);
+
+//    m_groups[2]->addObject(m_groups[0]);
+//    m_groups[2]->addObject(m_groups[1]);
+
+    m_TransformObjects.append(m_groups[1]);
+
+//    m_TransformObjects.append(m_groups[2]);
+
+    loadObj(":/s.obj");
+    m_objects[m_objects.size() - 1]->translate(QVector3D(3.0, 0.0, 0.0));
+    m_TransformObjects.append(m_objects[m_objects.size() - 1]);
 
     m_groups[0]->addObject(m_camera);
 
-    m_skybox = new SkyBox(100, QImage(":/skybox.png"));
+    m_skybox = new SkyBox(10, QImage(":/skybox.png"));
 
     m_timer.start(30, this);
 }
@@ -224,37 +237,37 @@ void Widget::wheelEvent(QWheelEvent *event)
 
 void Widget::timerEvent(QTimerEvent *event)
 {
-    Q_UNUSED(event);
+//    Q_UNUSED(event);
 
-    for(int i = 0; i < m_objects.size(); ++i)
-    {
-        if(i % 2 == 0)
-        {
-            m_objects[i]->rotate(QQuaternion::fromAxisAndAngle(1.0f, 0.0f, 0.0f, qSin(angleObject)));
-            m_objects[i]->rotate(QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, qCos(angleObject)));
-        }
-        else
-        {
-            m_objects[i]->rotate(QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, qSin(angleObject)));
-            m_objects[i]->rotate(QQuaternion::fromAxisAndAngle(1.0f, 0.0f, 0.0f, qCos(angleObject)));
-        }
-    }
+//    for(int i = 0; i < m_objects.size(); ++i)
+//    {
+//        if(i % 2 == 0)
+//        {
+//            m_objects[i]->rotate(QQuaternion::fromAxisAndAngle(1.0f, 0.0f, 0.0f, qSin(angleObject)));
+//            m_objects[i]->rotate(QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, qCos(angleObject)));
+//        }
+//        else
+//        {
+//            m_objects[i]->rotate(QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, qSin(angleObject)));
+//            m_objects[i]->rotate(QQuaternion::fromAxisAndAngle(1.0f, 0.0f, 0.0f, qCos(angleObject)));
+//        }
+//    }
 
-    m_groups[0]->rotate(QQuaternion::fromAxisAndAngle(0.0f, 0.0f, 1.0f, qSin(angleGroup1)));
-    m_groups[0]->rotate(QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, -qSin(angleGroup1)));
+//    m_groups[0]->rotate(QQuaternion::fromAxisAndAngle(0.0f, 0.0f, 1.0f, qSin(angleGroup1)));
+//    m_groups[0]->rotate(QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, -qSin(angleGroup1)));
 
-    m_groups[1]->rotate(QQuaternion::fromAxisAndAngle(1.0f, 0.0f, 0.0f, qCos(angleGroup1)));
-    m_groups[1]->rotate(QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, -qCos(angleGroup1)));
+//    m_groups[1]->rotate(QQuaternion::fromAxisAndAngle(1.0f, 0.0f, 0.0f, qCos(angleGroup1)));
+//    m_groups[1]->rotate(QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, -qCos(angleGroup1)));
 
-    m_groups[2]->rotate(QQuaternion::fromAxisAndAngle(1.0f, 0.0f, 0.0f, qSin(angleMain)));
-    m_groups[2]->rotate(QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, qCos(angleMain)));
+//    m_groups[2]->rotate(QQuaternion::fromAxisAndAngle(1.0f, 0.0f, 0.0f, qSin(angleMain)));
+//    m_groups[2]->rotate(QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, qCos(angleMain)));
 
-    angleObject += M_PI / 180.0f;
-    angleGroup1 += M_PI / 360.0f;
-    angleGroup2 -= M_PI / 360.0f;
-    angleMain += M_PI / 720.0f;
+//    angleObject += M_PI / 180.0f;
+//    angleGroup1 += M_PI / 360.0f;
+//    angleGroup2 -= M_PI / 360.0f;
+//    angleMain += M_PI / 720.0f;
 
-    update();
+//    update();
 }
 
 void Widget::keyPressEvent(QKeyEvent *event)
@@ -363,6 +376,71 @@ void Widget::initCube(float width)
     }
 
     //m_image = new QOpenGLTexture(QImage(":/cube.png");
+    m_objects.append(new SimpleObject3D(vertexes, indexes, QImage(":/cube.png")));
+}
+
+void Widget::loadObj(const QString &path)
+{
+    QFile objFile(path);
+    if(!objFile.exists())
+    {
+        qDebug() << "File not found";
+    }
+
+    objFile.open(QIODevice::ReadOnly);
+    QTextStream input(&objFile);
+
+    QVector<QVector3D> coords;
+    QVector<QVector2D> texCoords;
+    QVector<QVector3D> normals;
+
+    QVector<VertexData> vertexes;
+    QVector<GLuint> indexes;
+
+    while(!input.atEnd())
+    {
+        QString str = input.readLine();
+        QStringList list = str.split(" ");
+
+        if(list[0] == "#")
+        {
+            qDebug() << "This is comment:" << str;
+            continue;
+        }
+        else if (list[0] == "mtllib")
+        {
+            qDebug() << "File with materials: " << str;
+            continue;
+        }
+        else if (list[0] == "v")
+        {
+            coords.append(QVector3D(list[1].toFloat(), list[2].toFloat(),list[3].toFloat()));
+            continue;
+        }
+        else if (list[0] == "vt")
+        {
+            texCoords.append(QVector2D(list[1].toFloat(), list[2].toFloat()));
+            continue;
+        }
+        else if (list[0] == "vn")
+        {
+            normals.append(QVector3D(list[1].toFloat(), list[2].toFloat(),list[3].toFloat()));
+            continue;
+        }
+        else if (list[0] == "f")
+        {
+            for(int i = 1; i <= 3; ++i)
+            {
+                QStringList vert = list[i].split("/");
+                vertexes.append(VertexData(coords[vert[0].toLong() - 1], texCoords[vert[1].toLong() - 1], normals[vert[2].toLong() - 1]));
+                indexes.append(indexes.size());
+            }
+            continue;
+        }
+    }
+
+    objFile.close();
+
     m_objects.append(new SimpleObject3D(vertexes, indexes, QImage(":/cube.png")));
 }
 

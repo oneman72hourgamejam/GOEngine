@@ -57,4 +57,5 @@ DISTFILES +=
 
 RESOURCES += \
     shaders.qrc \
-    textures.qrc
+    textures.qrc \
+    models.qrc

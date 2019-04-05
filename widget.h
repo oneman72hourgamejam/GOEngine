@@ -44,6 +44,8 @@ protected:
 
     void initShaders();
     void initCube(float width);
+    // константа по ссылке - строка не будет копироваться, будет передаваться адресс
+    void loadObj(const QString &path);
 
 private:
     QMatrix4x4 m_projectionMatrix;
