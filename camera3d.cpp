@@ -12,32 +12,53 @@ void Camera3D::draw(QOpenGLShaderProgram *program, QOpenGLFunctions *functions)
     if(functions != 0)
         return;
 
-    QMatrix4x4 viewMatrix;
-    viewMatrix.setToIdentity();
-    viewMatrix.translate(m_translate);
-    viewMatrix.rotate(m_rotate);
-    viewMatrix.scale(m_scale);
-    viewMatrix = m_globalTransform * viewMatrix;
-
-    program->setUniformValue("u_viewMatrix", viewMatrix);
+    program->setUniformValue("u_viewMatrix", m_viewMatrix);
 }
 
 void Camera3D::rotate(const QQuaternion &r)
 {
     m_rotate = r * m_rotate;
+
+    m_viewMatrix.setToIdentity();
+    m_viewMatrix.translate(m_translate);
+    m_viewMatrix.rotate(m_rotate);
+    m_viewMatrix.scale(m_scale);
+
+    m_viewMatrix = m_viewMatrix  *  m_globalTransform.inverted();
 }
 
 void Camera3D::translate(const QVector3D &t)
 {
     m_translate += t;
+
+    m_viewMatrix.setToIdentity();
+    m_viewMatrix.translate(m_translate);
+    m_viewMatrix.rotate(m_rotate);
+    m_viewMatrix.scale(m_scale);
+
+    m_viewMatrix = m_viewMatrix  *  m_globalTransform.inverted();
 }
 
 void Camera3D::scale(const float &s)
 {
     m_scale *= s;
+
+    m_viewMatrix.setToIdentity();
+    m_viewMatrix.translate(m_translate);
+    m_viewMatrix.rotate(m_rotate);
+    m_viewMatrix.scale(m_scale);
+
+    m_viewMatrix = m_viewMatrix  *  m_globalTransform.inverted();
 }
 
 void Camera3D::setGlobalTransform(const QMatrix4x4 &g)
 {
     m_globalTransform = g;
+
+    m_viewMatrix.setToIdentity();
+    m_viewMatrix.translate(m_translate);
+    m_viewMatrix.rotate(m_rotate);
+    m_viewMatrix.scale(m_scale);
+
+    m_viewMatrix = m_viewMatrix  *  m_globalTransform.inverted();
 }

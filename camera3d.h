@@ -22,6 +22,7 @@ private:
     QVector3D m_translate;
     float m_scale;
     QMatrix4x4 m_globalTransform;
+    QMatrix4x4 m_viewMatrix;
 };
 
 #endif // CAMERA3D_H

@@ -18,6 +18,8 @@ public:
     void draw(QOpenGLShaderProgram *program, QOpenGLFunctions *functions);
 
     void addObject(Transformational *obj);
+    void delObject(Transformational *obj);
+    void delObject(const int &index);
 
 private:
     QQuaternion m_rotate;

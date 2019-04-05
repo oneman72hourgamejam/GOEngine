@@ -1,6 +1,7 @@
 #include "widget.h"
 #include <simpleobject3d.h>
 #include <QMouseEvent>
+#include <QKeyEvent>
 #include <QtMath>
 #include <QOpenGLContext>
 #include "camera3d.h"
@@ -116,6 +117,8 @@ void Widget::initializeGL()
     m_groups[2]->addObject(m_groups[1]);
 
     m_TransformObjects.append(m_groups[2]);
+
+    m_groups[0]->addObject(m_camera);
 
     m_timer.start(30, this);
 }
@@ -237,6 +240,34 @@ void Widget::timerEvent(QTimerEvent *event)
     angleGroup1 += M_PI / 360.0f;
     angleGroup2 -= M_PI / 360.0f;
     angleMain += M_PI / 720.0f;
+
+    update();
+}
+
+void Widget::keyPressEvent(QKeyEvent *event)
+{
+    switch (event->key())
+    {
+    case Qt::Key_Left:
+        m_groups[0]->delObject(m_camera);
+        m_groups[1]->addObject(m_camera);
+        break;
+    case Qt::Key_Right:
+        m_groups[1]->delObject(m_camera);
+        m_groups[0]->addObject(m_camera);
+        break;
+    case Qt::Key_Down:
+        m_groups[0]->delObject(m_camera);
+        m_groups[1]->delObject(m_camera);
+        break;
+    case Qt::Key_Up:
+        m_groups[0]->delObject(m_camera);
+        m_groups[1]->delObject(m_camera);
+        QMatrix4x4 tmp;
+        tmp.setToIdentity();
+        m_camera->setGlobalTransform(tmp);
+        break;
+    }
 
     update();
 }

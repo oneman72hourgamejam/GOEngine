@@ -39,6 +39,7 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
     void wheelEvent(QWheelEvent *event);
     void timerEvent(QTimerEvent *event);
+    void keyPressEvent(QKeyEvent *event);
 
     void initShaders();
     void initCube(float width);
