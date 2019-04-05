@@ -6,7 +6,7 @@
 #include <QOpenGLContext>
 #include "camera3d.h"
 #include "group3d.h"
-
+#include "skybox.h"
 
 Widget::Widget(QWidget *parent)
     : QOpenGLWidget (parent)
@@ -15,7 +15,7 @@ Widget::Widget(QWidget *parent)
     m_camera->translate(QVector3D(0.0, 0.0, -5.0));
     this->camAngle = 45.0;
     this->camNearPlane = 0.01f;
-    this->camFarPlane = 100.0f;
+    this->camFarPlane = 1000.0f;
     this->camSmooth = 2.0;
     //this->camPosX = 0.1;
     //this->camPosY = 0.1;
@@ -120,6 +120,8 @@ void Widget::initializeGL()
 
     m_groups[0]->addObject(m_camera);
 
+    m_skybox = new SkyBox(100, QImage(":/skybox.png"));
+
     m_timer.start(30, this);
 }
 
@@ -138,6 +140,13 @@ void Widget::paintGL()
 //    viewMatrix.setToIdentity();
 //    viewMatrix.translate(m_position);
 //    viewMatrix.rotate(m_rotation);
+    // вначале отрисовываем скайбокс
+    m_programSkybox.bind();
+    m_programSkybox.setUniformValue("u_projectionMatrix", m_projectionMatrix);
+
+    m_camera->draw(&m_programSkybox);
+    m_skybox->draw(&m_programSkybox, context()->functions());
+    m_programSkybox.release();
 
     // биндим программу, чтоб иметь к ней доступ
     m_program.bind();
@@ -155,6 +164,8 @@ void Widget::paintGL()
     {
         m_TransformObjects[i]->draw(&m_program, context()->functions());
     }
+    // чтоб забиндить новую шейдерную программу - старую нужно освободить
+    m_program.release();
 }
 
 void Widget::mousePressEvent(QMouseEvent *event)
@@ -284,9 +295,21 @@ void Widget::initShaders()
     {
         close();
     }
-
     // объеденяем все шейдеры в один
     if(!m_program.link())
+    {
+        close();
+    }
+
+    if(!m_programSkybox.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/skybox.vsh"))
+    {
+        close();
+    }
+    if(!m_programSkybox.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/skybox.fsh"))
+    {
+        close();
+    }
+    if(!m_programSkybox.link())
     {
         close();
     }
